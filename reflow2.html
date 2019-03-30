@@ -59,17 +59,21 @@
         }
 
         function animationFrame() {
+            let top = absoluteDiv.getBoundingClientRect().top;
+            console.log(top);
            // shiftLeft();
             transformX();
           //  lotsOfPaintChange();
-            jamThread(2);
+            jamThread(5);
 
 
         }
 
         function idleCallback(){
             jamThread(2);
-            lotsOfLayoutChange();
+        //    lotsOfLayoutChange();
+
+            requestAnimationFrame(animationFrame);
         }
 
         function transformX(){
