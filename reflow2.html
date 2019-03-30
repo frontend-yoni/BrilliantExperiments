@@ -4,13 +4,16 @@
     <script>
         performance = performance;
         let absoluteDiv;
+        let stretchyDiv;
         window.onload = function () {
             absoluteDiv = document.querySelector('.absoluteDiv');
+            stretchyDiv = document.querySelector('.stretchyDiv');
             absoluteDiv.addEventListener('click', onClick);
 
             window.addEventListener('resize', onResize);
             document.addEventListener('scroll', onScroll);
 
+            printMeasurements();
             startMeasuring();
         }
 
@@ -23,20 +26,28 @@
             performance.mark('scrollEnd');
             performance.measure('scroll', 'scrollStart', 'scrollEnd');
             performance.mark('scrollStart');
-            jamThread(2);
+
+            printMeasurements('scroll');
+            jamThread(1000);
         }
 
         function onResize(e){
             performance.mark('resizeEnd');
             performance.measure('resize', 'resizeStart', 'resizeEnd');
             performance.mark('resizeStart');
-            jamThread(2);
+
+          //  stretchyDiv.style.width = Math.random() * 100 + '%';
+            printMeasurements('resize');
+
+            jamThread(500);
         }
 
         function measureFrame(){
             performance.mark('frameEnd');
             performance.measure('frame', 'frameStart', 'frameEnd');
             performance.mark('frameStart');
+
+          //  printMeasurements('frame');
             requestAnimationFrame(measureFrame);
         }
 
@@ -84,7 +95,7 @@
             absoluteDiv.style.perspectiveOrigin = `50%`;
         }
 
-        function doWork(duration) {
+        function doAsyncWork(duration) {
             return new Promise(function (resolve) {
                 setTimeout(resolve, duration);
             });
@@ -95,6 +106,15 @@
             while(performance.now() - startTime < duration){
                 //do jam
             }
+        }
+
+        function printMeasurements(trigger = 'resize'){
+            console.log(JSON.stringify({
+                trigger: trigger,
+                stretchyDivTop: stretchyDiv.getBoundingClientRect().top,
+                stretchyDivWidth: stretchyDiv.getBoundingClientRect().width,
+                bodyWidth: document.body.getBoundingClientRect().width
+            }));
         }
     </script>
 
@@ -120,7 +140,7 @@
             /*will-change: opacity;*/
         }
 
-        .stretchDiv{
+        .stretchyDiv{
             position: relative;
             height: 100px;
             width: 50%;
@@ -142,7 +162,7 @@
 <div class="absoluteDiv">
 </div>
 
-<div class="stretchDiv">
+<div class="stretchyDiv">
 </div>
 
 <div class="deepDownDiv">
