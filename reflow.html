@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        performance = performance;
+        let misterDiv;
+        window.onload = function () {
+            misterDiv = document.querySelector('.misterDiv');
+            misterDiv.addEventListener('click', onClick);
+        }
+
+        function onClick(e){
+            startMeasuring();
+
+            requestAnimationFrame(animationFrame);
+            requestIdleCallback(idleCallback);
+        }
+
+        function measureTime(){
+            performance.mark('boni');
+            performance.measure('yoniBoni', 'yoni', 'boni');
+            performance.mark('yoni');
+            requestAnimationFrame(measureTime);
+        }
+
+        function startMeasuring(){
+            performance.mark('yoni');
+            requestAnimationFrame(measureTime);
+        }
+
+        function animationFrame() {
+           // shiftLeft();
+            transformX();
+          //  lotsOfPaintChange();
+            jamThread(10);
+
+
+        }
+
+        function idleCallback(){
+            jamThread(2);
+            lotsOfLayoutChange();
+        }
+
+        function transformX(){
+            misterDiv.style.transform = `translateX(${100}px)`;
+        }
+
+        function shiftLeft(){
+            misterDiv.style.left = `${250}px`;
+        }
+
+        function lotsOfLayoutChange(){
+            misterDiv.style.top = `${250}px`;
+            misterDiv.style.margin = `${30}px`;
+            misterDiv.style.padding = `${30}px`;
+            misterDiv.style.height = `${300}px`;
+            misterDiv.style.width = `${300}px`;
+        }
+
+        function lotsOfPaintChange(){
+          //  misterDiv.style.opacity = `0.1`;
+            misterDiv.style.background = `purple`;
+            misterDiv.style.transformOrigin = `50%`;
+            misterDiv.style.perspectiveOrigin = `50%`;
+        }
+
+        function doWork(duration) {
+            return new Promise(function (resolve) {
+                setTimeout(resolve, duration);
+            });
+        }
+
+        function jamThread(duration = 100) {
+            let startTime = performance.now();
+            while(performance.now() - startTime < duration){
+                //do jam
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            position: absolute;
+            margin: 0;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            overflow: auto;
+            background: #333;
+        }
+
+        .misterDiv {
+            position: absolute;
+            height: 200px;
+            width: 200px;
+            background: orangered;
+            top: 20px;
+            left: 20px;
+            will-change: opacity;
+        }
+    </style>
+</head>
+<body>
+<div class="misterDiv">
+
+</div>
+</body>
+</html>
