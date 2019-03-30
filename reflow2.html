@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        performance = performance;
+        let absoluteDiv;
+        window.onload = function () {
+            absoluteDiv = document.querySelector('.absoluteDiv');
+            absoluteDiv.addEventListener('click', onClick);
+
+            window.addEventListener('resize', onResize);
+            document.addEventListener('scroll', onScroll);
+
+            startMeasuring();
+        }
+
+        function onClick(e){
+            requestAnimationFrame(animationFrame);
+            requestIdleCallback(idleCallback);
+        }
+
+        function onScroll(e){
+            performance.mark('scrollEnd');
+            performance.measure('scroll', 'scrollStart', 'scrollEnd');
+            performance.mark('scrollStart');
+            jamThread(2);
+        }
+
+        function onResize(e){
+            performance.mark('resizeEnd');
+            performance.measure('resize', 'resizeStart', 'resizeEnd');
+            performance.mark('resizeStart');
+            jamThread(2);
+        }
+
+        function measureFrame(){
+            performance.mark('frameEnd');
+            performance.measure('frame', 'frameStart', 'frameEnd');
+            performance.mark('frameStart');
+            requestAnimationFrame(measureFrame);
+        }
+
+        function startMeasuring(){
+            performance.mark('frameStart');
+            performance.mark('scrollStart');
+            performance.mark('resizeStart');
+            requestAnimationFrame(measureFrame);
+        }
+
+        function animationFrame() {
+           // shiftLeft();
+            transformX();
+          //  lotsOfPaintChange();
+            jamThread(2);
+
+
+        }
+
+        function idleCallback(){
+            jamThread(2);
+            lotsOfLayoutChange();
+        }
+
+        function transformX(){
+            absoluteDiv.style.transform = `translateX(${100}px)`;
+        }
+
+        function shiftLeft(){
+            absoluteDiv.style.left = `${250}px`;
+        }
+
+        function lotsOfLayoutChange(){
+            absoluteDiv.style.top = `${250}px`;
+            absoluteDiv.style.margin = `${30}px`;
+            absoluteDiv.style.padding = `${30}px`;
+            absoluteDiv.style.height = `${300}px`;
+            absoluteDiv.style.width = `${300}px`;
+        }
+
+        function lotsOfPaintChange(){
+          //  absoluteDiv.style.opacity = `0.1`;
+            absoluteDiv.style.background = `purple`;
+            absoluteDiv.style.transformOrigin = `50%`;
+            absoluteDiv.style.perspectiveOrigin = `50%`;
+        }
+
+        function doWork(duration) {
+            return new Promise(function (resolve) {
+                setTimeout(resolve, duration);
+            });
+        }
+
+        function jamThread(duration = 100) {
+            let startTime = performance.now();
+            while(performance.now() - startTime < duration){
+                //do jam
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            position: absolute;
+            margin: 0;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            overflow: auto;
+            background: #333;
+        }
+
+        .absoluteDiv {
+            position: absolute;
+            height: 200px;
+            width: 200px;
+            background: orangered;
+            top: 20px;
+            left: 20px;
+            /*will-change: opacity;*/
+        }
+
+        .stretchDiv{
+            position: relative;
+            height: 100px;
+            width: 50%;
+            margin: auto;
+            background: hotpink;
+            top: 250px;
+        }
+
+        .deepDownDiv{
+            position: absolute;
+            top: 20000px;
+            width: 10px;
+            height: 10px;
+            background: fuchsia;
+        }
+    </style>
+</head>
+<body>
+<div class="absoluteDiv">
+</div>
+
+<div class="stretchDiv">
+</div>
+
+<div class="deepDownDiv">
+
+</div>
+</body>
+</html>
